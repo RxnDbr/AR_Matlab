@@ -30,7 +30,12 @@ ImBin = imdilate(ImBin, SE);
 [ImLab, num] = bwlabel(ImBin,4);
 %barycenter research
 %mean of the position of each point in a shape
-truc = find(ImLab, 1);
+ImBar = [];
+for i=1:num
+     [X,Y] = find(ImLab==i);
+     ImBar(i,:) = mean([X,Y]);
+%     ImBar(i,:) = mean(find(ImLab==i));
+end
 
 
 
