@@ -20,17 +20,21 @@ meanRGB = [mean(R); mean(G); mean(B)];
 matCov = cova(colorVect, meanRGB);
 nbImMax = video.numberOfFrames;
 
+%model calculation
 ImBin = model(Im1, meanRGB, matCov);
 %figure, imshow(im2bw(ImBin))
-%label
+
+%Dialte in order to have 4points
 SE = [0 1 0 ; 1 1 1; 0 1 0];
 ImBin = imdilate(ImBin, SE);
 %figure , imshow(im2bw(ImBin))
 
+%label attribution randomly
 [ImLab, num] = bwlabel(ImBin,4);
+
 %barycenter research
 %mean of the position of each point in a shape
-truc = find(ImLab, 1);
+ImBar = barycenterCalc(ImLab, num);
 
 
 
