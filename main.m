@@ -20,20 +20,34 @@ meanRGB = [mean(R); mean(G); mean(B)];
 matCov = cova(colorVect, meanRGB);
 nbImMax = video.numberOfFrames;
 
-for n=1:nbImMax
-    Im = read(video, n);
-    %model applicaiton
-    ImBin = model(Im, meanRGB, matCov);
-    %label
-    ImLab = bwlabel(ImBin, 4);
-       
-    %barycenter research
-    
-    %barycenter position
-    %homography
-    %superimposition
-    
-end
+ImBin = model(Im1, meanRGB, matCov);
+%figure, imshow(im2bw(ImBin))
+%label
+SE = [0 1 0 ; 1 1 1; 0 1 0];
+ImBin = imdilate(ImBin, SE);
+%figure , imshow(im2bw(ImBin))
+
+[ImLab, num] = bwlabel(ImBin,4);
+%barycenter research
+%mean of the position of each point in a shape
+truc = find(ImLab, 1);
+
+
+
+
+% for n=1:nbImMax
+%     Im = read(video, n);
+%     %model applicaiton
+%     ImBin = model(Im, meanRGB, matCov);
+%     %label
+%     ImLab = bwlabel(ImBin, 4);
+%     %barycenter research
+%     
+%     %barycenter position
+%     %homography
+%     %superimposition
+%     
+% end
 
 
 

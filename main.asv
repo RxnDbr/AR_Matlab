@@ -1,8 +1,7 @@
 clear all
 close all
 video = VideoReader('vid_in.mp4');
-n = 1;
-Im1 = read(video, n); %1st image of the video
+Im1 = read(video, 1); %1st image of the video
 
 %select 2points
 figure, image(Im1)
@@ -19,20 +18,36 @@ B = colorVect(:, 3);
 
 meanRGB = [mean(R); mean(G); mean(B)];
 matCov = cova(colorVect, meanRGB);
+nbImMax = video.numberOfFrames;
 
-while hasFrame(video)
-    Im = read(video, n);
-    %model applicaiton
-    model(Im, meanRGB, matCov);
-    %label
-    
-    %barycenter research
-    %barycenter position
-    %homography
-    %superimposition
-    
-    n = n+1 ;
-end
+ImBin = model(Im1, meanRGB, matCov);
+%figure, imshow(im2bw(ImBin))
+%label
+SE = [0 1 0 ; 1 1 1; 0 1 0];
+ImBin = imdilate(ImBin, SE);
+%figure , imshow(im2bw(ImBin))
+
+[ImLab, num] = bwlabel(ImBin,4);
+%barycenter research
+%mean of the position of each point in a shape
+truc = find(ImLab, 1);
+
+
+
+
+% for n=1:nbImMax
+%     Im = read(video, n);
+%     %model applicaiton
+%     ImBin = model(Im, meanRGB, matCov);
+%     %label
+%     ImLab = bwlabel(ImBin, 4);
+%     %barycenter research
+%     
+%     %barycenter position
+%     %homography
+%     %superimposition
+%     
+% end
 
 
 
