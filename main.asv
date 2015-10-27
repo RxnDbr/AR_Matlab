@@ -44,28 +44,20 @@ Im1 = read(video, 1); %1st image of the video
    
 nbImMax = video.numberOfFrames;
 prevOrg = ImBar1; % 1st org
-num
-prevOrg
-for n=2:nbImMax %start at the second image, we've already studied the 1st
+for n=2:4 %start at the second image, we've already studied the 1st
      Im = read(video, n);
      %model applicaiton
      ImBin = model(Im, meanRGB, matCov);
-     
-     SE = [0 1 0 ; 1 1 1; 0 1 0];
-     ImBin = imdilate(ImBin, SE);
-     
      %label
      [ImLab, num] = bwlabel(ImBin, 4);
      %barycenter research
-     
      ImBar = barycenterCalc(ImLab, num); % curent organization
      %barycenter organization depending on the previous organization
      orga = organize(prevOrg, ImBar);
-     orga
      
      %homography
      %superimposition
-     prevOrg = orga;
+     prevOrg = ImBar;
      
  end
 
