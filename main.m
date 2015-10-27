@@ -36,9 +36,7 @@ ImBin = imdilate(ImBin, SE);
 %mean of the position of each point in a shape
 ImBar = barycenterCalc(ImLab, num);
 
-
-
-
+ImBar = organize(ImBar);
 % for n=1:nbImMax
 %     Im = read(video, n);
 %     %model applicaiton

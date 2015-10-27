@@ -1,16 +1,15 @@
 function newIm = maha(image, meanRGB, matCov)
 %a est un scalaire pour un point
 
-
 %xi - m trans* mat cov inverse* xi-m
 sizeI = size(image);
 length = sizeI(:,2);
 width = sizeI(:,1);
 newIm = [];
 image = double(image);
-% 
-% comp2 = inv(matCov);
-% comp3 = [image(:,:,1) - meanRGB(1), image(:,:,2) - meanRGB(2), image(:,:,3) - meanRGB(3)];
+ 
+compDeux = inv(matCov);
+compTrois = [image(:,:,1) - meanRGB(1), image(:,:,2) - meanRGB(2), image(:,:,3) - meanRGB(3)];
 % calc1 = comp2 *comp3;
 % newIm = comp3 .* calc1;
 
