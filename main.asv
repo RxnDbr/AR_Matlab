@@ -45,7 +45,7 @@ Im1 = read(video, 1); %1st image of the video
 nbImMax = video.numberOfFrames;
 prevOrg = ImBar1; % 1st org
 
-for n=2:nbImMax %start at the second image, we've already studied the 1st
+for n=2:4:nbImMax %start at the second image, we've already studied the 1st step = 4 in order to be faster
      Im = read(video, n);
      %model applicaiton
      ImBin = model(Im, meanRGB, matCov);
@@ -64,7 +64,6 @@ for n=2:nbImMax %start at the second image, we've already studied the 1st
      %homography
      %superimposition
      prevOrg = orga;
-     orga
      
  end
 

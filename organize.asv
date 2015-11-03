@@ -13,5 +13,4 @@ function orga = organize(prevOrg, curOrg)
         index = find(sumA == min(sumA(:))); % pick the min value of the matrix and save its row
         orga(i,:) = curOrg(index,:); % ordonate matrix
     end
-    [row, col] = size(prevOrg);
-    orga = orga(1:row,:); % in case curOrg>4 
+    orga = orga(:4,:)
