@@ -55,7 +55,7 @@ for n=1:nbImMax
      
      %keep only interesting aerea (four next to the previous point)
      ImIZ = [];
-     radius = 30;
+     radius = 20;
      ImBin = [];
      [row, col] = size(Im);
      ImBin(1:row,1:col)=0;
