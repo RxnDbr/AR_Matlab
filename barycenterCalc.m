@@ -4,7 +4,7 @@ function ImBar = barycenterCalc(ImLab, num)
     ImBar = [];
     for i=1:num
          [X,Y] = find(ImLab==i);
-         ImBar(i,:) = mean([X,Y]);
-    %     ImBar(i,:) = mean(find(ImLab==i));
+         ImBar(i,:) = int32(mean([X,Y]));
+         
     end
 end

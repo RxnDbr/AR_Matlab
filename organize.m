@@ -1,10 +1,8 @@
-function orga = organize(prevOrg, curOrg)
+function newOrg = organize(prevOrg, curOrg)
     %return curOrg which is the curent organization of barycenters classified
     %depending on the previous one
-    orga = [];
+    newOrg = [];
     for i=1:size(prevOrg(:,1)) % do it for each dot
-        %        prevOrgRep = repmat(prevOrg(i,:), size(curOrg, 1), 1); % replicate the ith row of the previous organized matrix in order not
-        
         prevOrgRep = repmat(prevOrg(i,:), size(curOrg, 1), 1); % replicate the ith row of the previous organized matrix in order not to loop
         A = [];
         A = abs(curOrg-prevOrgRep); %delta matrix from the prevOrg[i] for each row of the current organization
@@ -13,7 +11,6 @@ function orga = organize(prevOrg, curOrg)
             sumA(j,:) = sum(A(j,:));
         end
         index = find(sumA == min(sumA(:))); % pick the min value of the matrix and save its row
-        orga(i,:) = curOrg(index,:); % ordonate matrix
+        newOrg(i,:) = curOrg(index,:); % ordonate matrix
     end
-    [row, col] = size(prevOrg);
-    orga = orga(1:row,:); % in case curOrg>4 
+end

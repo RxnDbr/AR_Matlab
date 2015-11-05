@@ -41,7 +41,7 @@ ImBar1 = barycenterCalc(ImLab1, num);
 
 %the same organized 
 ImBar1 = firstOrganize(ImBar1);
-   
+
 nbImMax = video.numberOfFrames;
 prevOrg = ImBar1; % 1st org
 
@@ -51,7 +51,7 @@ for n=2:nbImMax %start at the second image, we've already studied the 1st
      
      %keep only interesting aerea (four next to the previous point)
      ImIZ = [];
-     radius = 30;
+     radius = 20;
      ImBin = [];
      [row, col] = size(Im);
      ImBin(1:row,1:col)=0;
@@ -86,7 +86,10 @@ for n=2:nbImMax %start at the second image, we've already studied the 1st
 
 
 
-
+%figure, imshow(a)
+%hold on
+%plot(x,y, "+")
+%hold off
 
 
 
