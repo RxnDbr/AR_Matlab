@@ -41,12 +41,16 @@ ImBar1 = barycenterCalc(ImLab1, num);
 
 %the same organized 
 ImBar1 = firstOrganize(ImBar1);
-
+   
 nbImMax = video.numberOfFrames;
 prevOrg = ImBar1; % 1st org
 
-for n=2:nbImMax %start at the second image, we've already studied the 1st
-     Im = read(video, n);
+mov=avifile('FinalVideo.avi','compression','none');
+
+for n=1:nbImMax
+     source = VideoReader('horse.avi');
+     source = read(source, n);
+     Im = read(video,n);
      %model applicaiton
      
      %keep only interesting aerea (four next to the previous point)
@@ -57,8 +61,8 @@ for n=2:nbImMax %start at the second image, we've already studied the 1st
      ImBin(1:row,1:col)=0;
      [rowPrev, colPrev] = size(prevOrg);
      for i=1:rowPrev %only keep a small zone in the image not to process all the image : it reduce 
-         
-         ImIZ = Im(prevOrg(i,1)-radius:prevOrg(i,1)+radius , prevOrg(i,2)-radius:prevOrg(i,2)+radius,:); % cut an interesting zone in Im
+         roundOrg=round(prevOrg);
+         ImIZ = Im( roundOrg(i,1)-radius: roundOrg(i,1)+radius ,  roundOrg(i,2)-radius: roundOrg(i,2)+radius,:); % cut an interesting zone in Im
          %figure, imshow(ImIZ)
          ImBinI = model(ImIZ, meanRGB, matCov); 
          %figure, imshow(ImBinI)
@@ -78,18 +82,29 @@ for n=2:nbImMax %start at the second image, we've already studied the 1st
      %barycenter organization depending on the previous organization
      orga = organize(prevOrg, ImBar);
      
-     %homography
-     %superimposition
      prevOrg = orga;
      
- end
+     %source = imread('lena.bmp'); %Test to Inlay an Image
+     vecX=transpose(orga(:,2));
+     vecY=transpose(orga(:,1));
+     
+     dimIm=size(Im);
+     mask=uint8(zeros(dimIm(1),dimIm(2)));
+
+     frame.cdata= motif2frame(source, Im,vecX, vecY, 0.83, mask);
+     %Apply the transformation
+     %figure, imshow(frame.cdata); % Test the image concatenation
+     mov = addframe(mov,frame.cdata);
+    
+end     
+    
+mov = close(mov);
+disp('New Video Saved !');
+ 
 
 
 
-%figure, imshow(a)
-%hold on
-%plot(x,y, "+")
-%hold off
+
 
 
 
