@@ -12,14 +12,13 @@ function orga = firstOrganize(barys)
     
     i=1;
     [r,c] = size(points);
-    pass = 0;
+    pass = 0; %boolean
     while (i<=r) && (pass==0)
         part1 = prod2Vect(barys(points(i,1),:), barys(points(i,2),:), barys(points(i,3),:))> 0 ;   
         part2 = prod2Vect(barys(points(i,1),:), barys(points(i,3),:), barys(points(i,4),:))> 0 ;      
         pass = part1 && part2;
         i= i + 1;
     end
-    %i-1
     orga = [];
     for n=1:4
         orga(n,:) = barys(points(i-1,n),:);   

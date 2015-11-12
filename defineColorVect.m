@@ -1,4 +1,4 @@
-function A = defineColorVect(Im, pointA, pointB)
+function colorVect = defineColorVect(Im, pointA, pointB)
 %il faut crécupere données colorimétrique pour chaque pixel dans ce
 %rectange
 %parcourir de A(x) à B(x) pour chacun de a(y) a b(y)
@@ -11,6 +11,6 @@ R = R(:);
 G = G(:);
 B = B(:);
 
-A = [R,G,B];
+colorVect = [R,G,B];
 
 end
