@@ -1,6 +1,8 @@
 clear all
 close all
 
+tic
+
 %base video
 videoBase = VideoReader('vid_in.mp4');
 nbImBaseMax = videoBase.numberOfFrames;
@@ -9,7 +11,7 @@ nbImBaseMax = videoBase.numberOfFrames;
 videoAdd = VideoReader('horse.avi');
 
 %final video
-videoFinal = VideoWriter('FinalVideo.avi');
+videoFinal = VideoWriter('FinalVideo', 'MPEG-4');
 
 %=========================================================================
 %PROCESS IN THE FIRST IMAGE OF THE VIDEO
@@ -55,11 +57,15 @@ for n=1:nbImBaseMax
      mask=uint8(zeros(row,col));
 
      ImFinal = motif2frame(ImAdd, ImBase,vecX, vecY, 0.83, mask);
+          
+     ImFinal = removeHand(ImBase,ImFinal);
      writeVideo(videoFinal,ImFinal);
     
 end   
 
 close(videoFinal)
+
+toc
 
 disp('New Video Saved !');
  

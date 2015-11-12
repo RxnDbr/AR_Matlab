@@ -27,3 +27,4 @@ function ImBin = createImBin(Im, baryOrg, radius, meanRGB, matCov, threshold)
      SE = [0 1 0 ; 1 1 1; 0 1 0];
      
      ImBin = imdilate(ImBin, SE);
+end
