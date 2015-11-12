@@ -1,36 +1,27 @@
 clear all
 close all
-video = VideoReader('vid_in.mp4');
-Im1 = read(video, 1); %1st image of the video
 
-%define model with the 1st image
+%base video
+videoBase = VideoReader('vid_in.mp4');
+nbImMax = videoBase.numberOfFrames;
 
-%select 2points 
-figure, image(Im1)
-[x,y] = ginput(2);
-pointA = [fix(x(1)) fix(y(1))];
-pointB = [fix(x(2)) fix(y(2))];
-ImSelect = Im1(pointA(2):pointB(2), pointA(1):pointB(1), :);
+%additional video
+videoAdd = VideoReader('horse.avi');
 
+%final video
+videoFinal=avifile('FinalVideo.avi','compression','none');
 
-colorVect = defineColorVect(Im1, pointA, pointB);
-R = colorVect(:, 1);
-G = colorVect(:, 2);
-B = colorVect(:, 3);
+Im1 = read(videoBase, 1); %1st image of the video
 
-%calcul the mean and sigma matrix
-meanRGB = [mean(R); mean(G); mean(B)];
-matCov = cova(colorVect, meanRGB);
+load('paramsDot.mat')
 
-%create a binary image based on the values obtained with the 2 selected
-%points
-ImBin1 = model(Im1, meanRGB, matCov);
-% to see it : figure, imshow(im2bw(ImBin))
+matDist = maha2(Im1, meanRGB, matCov);
+
+ImBin1 = (matDist < threshold);
 
 %Dialte dots in order to have only 4
 SE = [0 1 0 ; 1 1 1; 0 1 0];
 ImBin1 = imdilate(ImBin1, SE);
-%figure , imshow(im2bw(ImBin))
 
 %label attribution randomly
 [ImLab1, num] = bwlabel(ImBin1,4);
@@ -42,29 +33,30 @@ ImBar1 = barycenterCalc(ImLab1, num);
 %the same organized 
 ImBar1 = firstOrganize(ImBar1);
    
-nbImMax = video.numberOfFrames;
 prevOrg = ImBar1; % 1st org
 
-mov=avifile('FinalVideo.avi','compression','none');
-
 for n=1:nbImMax
-     source = VideoReader('horse.avi');
-     source = read(source, n);
-     Im = read(video,n);
-     %model applicaiton
+
+     source = read(videoBase, n);
      
+     Im = read(videoBase,n);
+     [row, col] = size(Im);
+     
+     %model applicaiton
      %keep only interesting aerea (four next to the previous point)
      ImIZ = [];
-     radius = 20;
+     radius = 20; %region of interest around a barycenter
      ImBin = [];
-     [row, col] = size(Im);
      ImBin(1:row,1:col)=0;
      [rowPrev, colPrev] = size(prevOrg);
-     for i=1:rowPrev %only keep a small zone in the image not to process all the image : it reduce 
-         roundOrg=round(prevOrg);
-         ImIZ = Im( roundOrg(i,1)-radius: roundOrg(i,1)+radius ,  roundOrg(i,2)-radius: roundOrg(i,2)+radius,:); % cut an interesting zone in Im
+     
+     for i=1:rowPrev %only keep a small zone in the image not to process all the image 
+         ImIZ = Im( prevOrg(i,1)-radius: prevOrg(i,1)+radius ,  prevOrg(i,2)-radius: prevOrg(i,2)+radius,:); % cut an interesting zone in Im
+         
          %figure, imshow(ImIZ)
-         ImBinI = model(ImIZ, meanRGB, matCov); 
+         matDist = maha2(ImIZ, meanRGB, matCov);
+         ImBinI = (matDist < threshold); 
+         
          %figure, imshow(ImBinI)
          ImBin(prevOrg(i,1)-radius:prevOrg(i,1)+radius , prevOrg(i,2)-radius:prevOrg(i,2)+radius) = ImBinI; % paste it in ImBin           
          %figure, imshow(im2bw(ImBin))
@@ -76,9 +68,10 @@ for n=1:nbImMax
      
      %label
      [ImLab, num] = bwlabel(ImBin, 4);
-     %barycenter research
      
+     %barycenter research
      ImBar = barycenterCalc(ImLab, num); % curent organization
+     
      %barycenter organization depending on the previous organization
      orga = organize(prevOrg, ImBar);
      
@@ -88,17 +81,19 @@ for n=1:nbImMax
      vecX=transpose(orga(:,2));
      vecY=transpose(orga(:,1));
      
-     dimIm=size(Im);
-     mask=uint8(zeros(dimIm(1),dimIm(2)));
+     mask=uint8(zeros(row,col));
 
      frame.cdata= motif2frame(source, Im,vecX, vecY, 0.83, mask);
      %Apply the transformation
      %figure, imshow(frame.cdata); % Test the image concatenation
-     mov = addframe(mov,frame.cdata);
+     videoFinal = addframe(videoFinal,frame.cdata);
     
 end     
     
-mov = close(mov);
+close(videoFinal);
+close(videoAdd);
+close(videoBase);
+
 disp('New Video Saved !');
  
 
